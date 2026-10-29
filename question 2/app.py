@@ -24,7 +24,7 @@ RESULTS_MEDIA = "application/vnd.ga5.invoice-action-results+json"
 RECEIPTS_MEDIA = "application/vnd.ga5.invoice-action-receipts+json"
 OUTPUT_MODES = [PROPOSALS_MEDIA, RECEIPTS_MEDIA]
 BASE_PATH = os.getenv("A2A_BASE_PATH", "/a2a").rstrip("/") or "/a2a"
-PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", f"https://localhost{BASE_PATH}/")
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL") or f"{os.getenv('RENDER_EXTERNAL_URL', 'https://localhost').rstrip('/')}{BASE_PATH}/"
 if not PUBLIC_BASE_URL.endswith("/"):
     PUBLIC_BASE_URL += "/"
 
