@@ -5,8 +5,8 @@ services:
     plan: free
     region: singapore
     rootDir: question 2
-    dockerfilePath: question 2/Dockerfile
-    dockerContext: question 2
+    dockerfilePath: Dockerfile
+    dockerContext: .
     healthCheckPath: /.well-known/agent-card.json
     envVars:
       - key: A2A_BASE_PATH
