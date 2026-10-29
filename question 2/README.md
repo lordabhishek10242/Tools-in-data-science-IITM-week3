@@ -18,21 +18,19 @@ Python 3.11+ is recommended.
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-$env:PUBLIC_BASE_URL = "https://your-public-host.example/a2a/"
-$env:AI_BASE_URL = "https://api.openai.com/v1"
-$env:AI_MODEL = "gpt-4o-mini"
+$env:AI_BASE_URL = "<your provider's OpenAI-compatible base URL>"
+$env:AI_MODEL = "<your provider's model name>"
 $env:AI_API_KEY = "<your provider key>"
 uvicorn app:app --host 0.0.0.0 --port 8000 --workers 1
 ```
 
-For local Ollama, set `AI_BASE_URL=http://127.0.0.1:11434/v1`, choose an installed chat model, and leave `AI_API_KEY` empty. Configure another OpenAI-compatible endpoint by setting its base URL, model and key. Do not commit provider keys.
+The agent expects an OpenAI-compatible chat-completions endpoint. For local Ollama, set `AI_BASE_URL=http://127.0.0.1:11434/v1`, choose an installed chat model, and leave `AI_API_KEY` empty. Do not commit provider keys.
 
 ## Deploy with Render Blueprint
 
-1. In Render, create a Blueprint from this repository and select `render.yaml` under `question 2` as the Blueprint file.
-2. Set `PUBLIC_BASE_URL` to the final public HTTPS URL including `/a2a/`, for example `https://<service>.onrender.com/a2a/`.
-3. Set the AI provider key in the private environment variable field. Never place it in source control.
-4. After deployment, the Agent Card is at `https://<service>.onrender.com/.well-known/agent-card.json`; submit the `supportedInterfaces[0].url` value as the base URL.
+1. In Render, create a Blueprint from this repository and select `question 2/render.yaml` as the Blueprint file.
+2. During initial setup, provide the selected provider's base URL, model name and API key for the three prompted `AI_*` environment variables. Never place the key in source control.
+3. The Agent Card is at `https://<service>.onrender.com/.well-known/agent-card.json`; the service derives its base URL from Render's documented `RENDER_EXTERNAL_URL` variable. Submit the `supportedInterfaces[0].url` value as the base URL.
 
 The included Render Blueprint uses a free PostgreSQL database for durable state during short-lived verification. Render documents that free Postgres databases expire 30 days after creation; switch `DATABASE_URL` to a durable managed PostgreSQL database for longer-lived use. The web service uses a free instance, which can spin down when idle, so the first request after inactivity can be slow.
 
