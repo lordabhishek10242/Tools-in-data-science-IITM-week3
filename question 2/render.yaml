@@ -3,6 +3,7 @@ services:
     name: invoice-action-agent
     runtime: docker
     plan: free
+    rootDir: question 2
     healthCheckPath: /.well-known/agent-card.json
     envVars:
       - key: PUBLIC_BASE_URL
