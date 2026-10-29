@@ -3,27 +3,29 @@ services:
     name: invoice-action-agent
     runtime: docker
     plan: free
+    region: singapore
     rootDir: question 2
+    dockerfilePath: question 2/Dockerfile
+    dockerContext: question 2
     healthCheckPath: /.well-known/agent-card.json
     envVars:
-      - key: PUBLIC_BASE_URL
-        sync: false
       - key: A2A_BASE_PATH
         value: /a2a
-      - key: DATABASE_PATH
-        value: /data/invoice-agent.sqlite3
       - key: DATABASE_URL
         fromDatabase:
           name: invoice-agent-db
           property: connectionString
       - key: AI_BASE_URL
-        value: https://api.openai.com/v1
+        sync: false
       - key: AI_API_KEY
         sync: false
       - key: AI_MODEL
-        value: gpt-4o-mini
+        sync: false
+      - key: PORT
+        value: "10000"
 databases:
   - name: invoice-agent-db
     databaseName: invoice_agent
     plan: free
+    region: singapore
 
