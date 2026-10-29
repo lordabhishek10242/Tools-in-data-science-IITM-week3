@@ -10,6 +10,7 @@ import uuid
 from typing import Any
 
 from fastapi import FastAPI, Request
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.responses import JSONResponse
 
 from decision_engine import decide_batch, package_key
@@ -47,6 +48,12 @@ async def api_error_handler(_request: Request, exc: ApiError):
 @app.exception_handler(Exception)
 async def generic_error_handler(_request: Request, _exc: Exception):
     return JSONResponse({"error": {"code": "INTERNAL_ERROR"}}, status_code=500, media_type=A2A_MEDIA)
+
+
+@app.exception_handler(StarletteHTTPException)
+async def http_error_handler(_request: Request, exc: StarletteHTTPException):
+    code = "NOT_FOUND" if exc.status_code == 404 else "METHOD_NOT_ALLOWED" if exc.status_code == 405 else "REQUEST_ERROR"
+    return JSONResponse({"error": {"code": code}}, status_code=exc.status_code, media_type=A2A_MEDIA)
 
 
 def new_id() -> str:
