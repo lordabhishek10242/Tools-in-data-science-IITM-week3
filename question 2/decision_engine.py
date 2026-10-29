@@ -88,11 +88,13 @@ def validate_decisions(packages: list[dict[str, Any]], value: Any) -> list[dict[
 
 
 async def decide_batch(packages: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    base = os.getenv("AI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-    model = os.getenv("AI_MODEL", "gpt-4o-mini")
+    base = os.getenv("AI_BASE_URL", "").rstrip("/")
+    model = os.getenv("AI_MODEL", "")
     api_key = os.getenv("AI_API_KEY", "")
+    if not base or not model:
+        raise RuntimeError("AI_BASE_URL and AI_MODEL must be configured")
     if not api_key and "localhost" not in base and "127.0.0.1" not in base:
-        raise RuntimeError("AI_API_KEY is not configured; use a hosted endpoint or local Ollama")
+        raise RuntimeError("AI_API_KEY is required for hosted endpoints")
     system = """You are an evidence-based invoice action analyst. You only propose actions; never execute payments.
 For every submitted package, select exactly one action: settle_invoice, request_approval, hold_invoice, reject_duplicate, open_exception.
 Read the current operative paragraph and distinguish it from cover sheets, archived examples, training decoys, negations and irrelevant action words. A duplicate means this same commercial invoice was already paid; a different invoice from the same vendor is not a duplicate. Use the amount in minor currency units. Do not invent facts or references.
