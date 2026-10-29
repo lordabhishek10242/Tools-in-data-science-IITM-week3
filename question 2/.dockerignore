@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+.venv
+__pycache__
+*.py[cod]
+*.sqlite3
+*.log
+outputs
+work
+
